@@ -68,7 +68,6 @@ int main(void) {
         AudioMoth_delay(100);
 
         AudioMoth_setBothLED(false);
-
     }
 
     /* Power down and wake up in one second */
