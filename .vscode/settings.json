@@ -1,0 +1,11 @@
+{
+    "cmake.configureOnOpen": true,
+    "files.associations": {
+        "diskio.h": "c",
+        "microsd.h": "c",
+        "microsdconfig.h": "c",
+        "em_rmu.h": "c",
+        "em_assert.h": "c"
+    },
+    "debug.node.autoAttach": "off"
+}
