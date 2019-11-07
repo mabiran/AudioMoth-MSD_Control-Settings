@@ -1,0 +1,4 @@
+h
+loadbin build/AudioMoth-Project.bin, 0x0
+r
+q
