@@ -28,7 +28,9 @@ project(AudioMoth-Project C CXX ASM)
 
 # Set device
 if (NOT DEVICE)
-    set(DEVICE EFM32WG380F256)
+     set(DEVICE EFM32WG380F256)
+    # set(DEVICE EFM32WG990F256)
+
 endif ()
 
 # Set build
@@ -63,13 +65,22 @@ set(CMAKE_EXE_LINKER_FLAGS "${COMMON_DEFINITIONS} -Xlinker -T${LINKER_SCRIPT} -W
 ##### Files #####
 
 # Add project headers
-include_directories(inc)
+include_directories(inc
+        efm32-base/hardware/kit/common/drivers
+        efm32-base/drivers/usb/inc)
 
 # Generate executable and link
 add_executable(${PROJECT_NAME}
+        efm32-base/hardware/kit/common/drivers/microsd.c
+        efm32-base/hardware/kit/common/drivers/msdd.c
+        efm32-base/hardware/kit/common/drivers/dmactrl.c
+        src/pinouts.c
         src/audioMoth.c
+        src/msddmedia.c
         src/main.c)
 
+# Define the flash memory space, used for build, debugging and JLink 
+set(FLASH_START 0x4000)
 set(FLASH_ORIGIN 0x4000)
 set(FLASH_LENGTH 0x3C000)
 efm32_configure_linker_addresses(${PROJECT_NAME})
@@ -79,10 +90,16 @@ target_link_libraries(${PROJECT_NAME} ${LIBS} emlib cmsis device fatfs)
 # Link optional libraries if available
 if (${HAS_HARDWARE})
     target_link_libraries(${PROJECT_NAME} hardware)
+    message("hardware linked")
+else ()
+    message("hardware not linked")
 endif ()
 
 if (${HAS_PROTOCOL})
     target_link_libraries(${PROJECT_NAME} protocol)
+    message("protocol linked")
+else ()
+    message("protocol not linked")
 endif ()
 
 ##### Post build #####

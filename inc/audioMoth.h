@@ -29,13 +29,18 @@ typedef enum {AM_BATTERY_LOW, AM_BATTERY_3V6, AM_BATTERY_3V7, AM_BATTERY_3V8, AM
 
 /* Time zone handler */
 
-extern void AudioMoth_timezoneRequested(int8_t *timezone);
+extern void AudioMoth_timezoneRequested(int8_t *timezoneHours, int8_t *timezoneMinutes);
 
 /* Interrupt handlers */
 
+extern void AudioMoth_handleMassStorageDeviceInterrupt(void);
 extern void AudioMoth_handleSwitchInterrupt(void);
 extern void AudioMoth_handleMicrophoneInterrupt(int16_t sample);
 extern void AudioMoth_handleDirectMemoryAccessInterrupt(bool isPrimaryBuffer, int16_t **nextBuffer);
+
+/* Default Audio Recording */
+
+extern void AudioMoth_processAudio(AM_switchPosition_t switchPosition, AM_switchPosition_t prevSwitchPosition);
 
 /* USB message handlers */
 
@@ -87,8 +92,8 @@ void AudioMoth_handleUSB(void);
 
 /* Backup domain */
 
-uint32_t AudioMoth_retreiveFromBackupDomain(uint32_t register);
-void AudioMoth_storeInBackupDomain(uint32_t register, uint32_t value);
+uint32_t AudioMoth_retreiveFromBackupDomain(uint32_t number);
+void AudioMoth_storeInBackupDomain(uint32_t number, uint32_t value);
 
 /* Time */
 
