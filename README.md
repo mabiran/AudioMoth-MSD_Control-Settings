@@ -36,7 +36,7 @@ It is designed to be permanently set the device in the USB position, and enclose
 1. `git clone --recurse-submodules https://github.com/victorromeo/AudioMoth-MSD.git` to download this repository.
 2. `mkdir build-release` to create the build directory.
 3. `cd build-release` to switch to the build directory.
-4. `cmake -DCMAKE_BUILD_TYPE=Release ..` to configure the build.
+4. `cmake -DCMAKE_BUILD_TYPE=Release ..` to configure the build.  Use `snap run cmake -DCMAKE_BUILD_TYPE=Release ..` if using a snap installed version.
 5. `make` to execute the build.
 
 You should get a `AudioMoth-Project.bin` with your custom firmware, which you can then [flash to the device](https://www.openacousticdevices.info/flashing).
