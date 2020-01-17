@@ -7,5 +7,18 @@
         "em_rmu.h": "c",
         "em_assert.h": "c"
     },
-    "debug.node.autoAttach": "off"
+    "debug.node.autoAttach": "off",
+    "cSpell.words": [
+        "DCMAKE",
+        "Kurte",
+        "LEDs",
+        "SWCLK",
+        "SWDIO",
+        "Toolchain",
+        "cmake",
+        "eabi",
+        "mkdir",
+        "recurse",
+        "submodules"
+    ]
 }
