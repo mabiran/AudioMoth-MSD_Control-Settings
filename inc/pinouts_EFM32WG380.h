@@ -7,12 +7,18 @@
 #ifndef PINOUTS_WG380_H_
 #define PINOUTS_WG380_H_
 
-/* Mass Storage Device Enable GPIO */
+/* Mass Storage Device Enable GPIO - On  */
+
+/* PF1/DBG_SWDIO#0,1,2,3/GPIO_EM4WU3/I2C0_SCL#5/LETIM0_OUT1#2/LEU0_RX#3/TIM0_CC1#5/US1_CS#2 */
 
 #define MSD_EN_GPIOPORT                         gpioPortF
 #define MSD_EN_PIN                              1
 
 /* MIC VOLTAGE */
+
+/* VREF Enable - Enables sampling of the current reference voltage, to determine if it is sufficient. */
+
+/* PA11/EBI_HSNC#0,1,2 */
 
 #define VREF_GPIOPORT                           gpioPortA
 #define VREF_EN                                 11

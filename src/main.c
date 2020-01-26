@@ -409,20 +409,25 @@ int main(void) {
 
     } 
 
-    AudioMoth_processAudio(switchPosition, *previousSwitchPosition);
+    AudioMoth_audio_mode(switchPosition, *previousSwitchPosition);
 }
 
-void AudioMoth_processAudio(AM_switchPosition_t switchPosition, AM_switchPosition_t prevSwitchPosition) {
-    /* Handle the case that the switch is in CUSTOM position but the time has not been set */
+void AudioMoth_audio_mode(AM_switchPosition_t switchPosition, AM_switchPosition_t prevSwitchPosition) {
 
     AudioMoth_setBothLED(false);
+
     for (int i = 0; i < 30; i++)
     {
         AudioMoth_setRedLED(true);
+
         AudioMoth_delay(10);
+
         AudioMoth_setRedLED(false);
+
         AudioMoth_delay(20);
     }
+
+    /* Handle the case that the switch is in CUSTOM position but the time has not been set */
 
     if (switchPosition == AM_SWITCH_CUSTOM && (AudioMoth_hasTimeBeenSet() == false || configSettings->activeStartStopPeriods == 0)) {
 
@@ -459,11 +464,15 @@ void AudioMoth_processAudio(AM_switchPosition_t switchPosition, AM_switchPositio
     //}
 
     AudioMoth_setBothLED(false);
+
     for (int i = 0; i < 30; i++)
     {
-        AudioMoth_setGreenLED(true);
+        AudioMoth_setRedLED(true);
+
         AudioMoth_delay(10);
-        AudioMoth_setGreenLED(false);
+
+        AudioMoth_setRedLED(false);
+
         AudioMoth_delay(20);
     }
 
@@ -482,23 +491,31 @@ void AudioMoth_processAudio(AM_switchPosition_t switchPosition, AM_switchPositio
         if (!configSettings->enableBatteryCheck || batteryState > AM_BATTERY_LOW) {
 
             AudioMoth_setBothLED(false);
+
             for (int i = 0; i < 5; i++)
             {
                 AudioMoth_setRedLED(true);
+
                 AudioMoth_delay(100);
+
                 AudioMoth_setRedLED(false);
+
                 AudioMoth_delay(200);
             }
 
             recordingState = makeRecording(currentTime, *durationOfNextRecording, enableLED, batteryState);
 
             AudioMoth_setBothLED(false);
+
             for (int i = 0; i < 3; i++)
             {
                 AudioMoth_setRedLED(true);
-                AudioMoth_delay(10);
+
+                AudioMoth_delay(100);
+
                 AudioMoth_setRedLED(false);
-                AudioMoth_delay(20);
+
+                AudioMoth_delay(200);
             }
 
         } else if (enableLED) {
@@ -532,15 +549,6 @@ void AudioMoth_processAudio(AM_switchPosition_t switchPosition, AM_switchPositio
         /* Flash LED to indicate waiting */
 
         FLASH_LED(Green, WAITING_LED_FLASH_DURATION);
-
-        AudioMoth_setBothLED(false);
-        for (int i = 0; i < 3; i++)
-        {
-            AudioMoth_setGreenLED(true);
-            AudioMoth_delay(10);
-            AudioMoth_setGreenLED(false);
-            AudioMoth_delay(20);
-        }
     }
 
     /* Determine how long to power down */
@@ -553,8 +561,10 @@ void AudioMoth_processAudio(AM_switchPosition_t switchPosition, AM_switchPositio
 
     }
 
-    /* Power down */
+    /* Power down for the calculated time 'secondsToSleep' */
+
     AudioMoth_setGreenLED(true);
+
     SAVE_SWITCH_POSITION_AND_POWER_DOWN(secondsToSleep);
 }
 
@@ -672,6 +682,7 @@ inline void AudioMoth_usbApplicationPacketReceived(uint32_t messageType, uint8_t
 static void filter(int16_t *source, int16_t *dest, uint8_t sampleRateDivider, uint32_t size) {
 
     int32_t filteredOutput;
+
     int32_t scaledPreviousFilterOutput;
 
     int index = 0;
@@ -739,12 +750,16 @@ static AM_recordingState_t makeRecording(uint32_t currentTime, uint32_t recordDu
     uint16_t oversampling = configSettings->oversampleRate * configSettings->sampleRateDivider;
 
     while (oversampling > 16) {
+
         oversampling >>= 1;
+    
         bitsToShift -= 1;
     }
 
     while (oversampling < 16) {
+
         oversampling <<= 1;
+
         bitsToShift += 1;
     }
 

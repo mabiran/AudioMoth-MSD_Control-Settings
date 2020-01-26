@@ -40,7 +40,7 @@ extern void AudioMoth_handleDirectMemoryAccessInterrupt(bool isPrimaryBuffer, in
 
 /* Default Audio Recording */
 
-extern void AudioMoth_processAudio(AM_switchPosition_t switchPosition, AM_switchPosition_t prevSwitchPosition);
+extern void AudioMoth_audio_mode(AM_switchPosition_t switchPosition, AM_switchPosition_t prevSwitchPosition);
 
 /* USB message handlers */
 

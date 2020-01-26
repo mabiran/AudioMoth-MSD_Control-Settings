@@ -1225,6 +1225,14 @@ static void disableRTC() {
 
 }
 
+static bool msd_mode_requested() {
+    return GPIO_PinInGet(MSD_EN_GPIOPORT, MSD_EN_PIN);
+}
+
+static bool audio_mode_requested() {
+    return !msd_mode_requested();
+}
+
 /* Function to handle USB from the application */
 
 void AudioMoth_handleUSB(void) {
@@ -1236,9 +1244,9 @@ void AudioMoth_handleUSB(void) {
 
     while (AudioMoth_getSwitchPosition() == AM_SWITCH_USB) {
 
-        if (GPIO_PinInGet(MSD_EN_GPIOPORT, MSD_EN_PIN)) {
+        if (audio_mode_requested()) {
             
-            AudioMoth_processAudio(AM_SWITCH_DEFAULT, AM_SWITCH_NONE);
+            AudioMoth_audio_mode(AM_SWITCH_DEFAULT, AM_SWITCH_NONE);
 
         } else {
 
@@ -1260,7 +1268,7 @@ void AudioMoth_handleUSB(void) {
 
             /* Stay within this busy loop while the switch is in USB, and SWDIO is low */
 
-            while (AudioMoth_getSwitchPosition() == AM_SWITCH_USB && !GPIO_PinInGet(MSD_EN_GPIOPORT, MSD_EN_PIN)) {
+            while (msd_mode_requested() && AudioMoth_getSwitchPosition() == AM_SWITCH_USB) {
 
                 if (MSDD_Handler())
                 {
@@ -1628,18 +1636,6 @@ bool AudioMoth_enableFileSystem(void) {
     {
         return false;
     }
-
-    // /* Initialise MicroSD driver */
-
-    // MICROSD_Init();
-
-    // /* Check SD card status */
-
-    // DSTATUS resCard = disk_initialize(0);
-
-    // if (resCard == STA_NOINIT || resCard == STA_NODISK || resCard == STA_PROTECT) {
-    //     return false;
-    // }
 
     /* Initialise file system */
 
