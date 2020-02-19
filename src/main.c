@@ -181,7 +181,7 @@ void setHeaderComment(uint32_t currentTime, int8_t timezoneHours, int8_t timezon
     }
 
     comment += 39;
-    sprintf(comment, ", \"gain\":%d",gain);
+    sprintf(comment, ", \"gain\":%d", (unsigned int)gain);
     comment += 10;
 
     sprintf(comment, ", \"volt\":%01d.%01d",batteryState / 10, batteryState%10);
@@ -207,7 +207,7 @@ void setHeaderComment(uint32_t currentTime, int8_t timezoneHours, int8_t timezon
         sprintf(comment, ", \"interrupt\":\"\"           }");
     }
  
-    comment == 28;
+    comment += 28;
 }
 
 /* USB configuration data structure */
