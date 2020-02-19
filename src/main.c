@@ -180,16 +180,18 @@ void setHeaderComment(uint32_t currentTime, int8_t timezoneHours, int8_t timezon
         sprintf(comment, "{ \"recorded\" : \"%04d-%02d-%02dT%02d:%02d:%02d%02d:%02d\"",1900 + time->tm_year,1 + time->tm_mon, time->tm_mday, time->tm_hour, time->tm_min, time->tm_sec, timezoneHours, timezoneMinutes);
     }
 
-    comment += 39;
+    comment += 42;
     sprintf(comment, ", \"gain\":%d", (unsigned int)gain);
     comment += 10;
 
-    sprintf(comment, ", \"volt\":%01d.%01d",batteryState / 10, batteryState%10);
+
+    AM_batteryState_t volt = batteryState + 35;
+    sprintf(comment, ", \"volt\":%01d.%01d",volt / 10, volt%10);
     comment += 12;
 
     if (batteryState == AM_BATTERY_LOW) {
         sprintf(comment, ", \"batt\":\"<3.6\" ");
-    } else if (batteryState == AM_BATTERY_FULL) {
+    } else if (batteryState >= AM_BATTERY_FULL) {
         sprintf(comment, ", \"batt\":\">4.9\"");
     } else {
         sprintf(comment, ", \"batt\":\"OK\"  ");
