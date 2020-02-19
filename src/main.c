@@ -158,78 +158,56 @@ void setHeaderComment(uint32_t currentTime, int8_t timezoneHours, int8_t timezon
 
     char *artist = wavHeader.iart.artist;
 
-    sprintf(artist, "AudioMoth %08X%08X", (unsigned int)*((uint32_t*)serialNumber + 1), (unsigned int)*((uint32_t*)serialNumber));
+    sprintf(artist, "AudioMoth %08X%08X", (unsigned int)*((uint32_t*) serialNumber + 1), (unsigned int)*((uint32_t*)serialNumber));
 
     /* Format comment field */
-
     char *comment = wavHeader.icmt.comment;
 
-    sprintf(comment, "Recorded at %02d:%02d:%02d %02d/%02d/%04d (UTC", time->tm_hour, time->tm_min, time->tm_sec, time->tm_mday, 1 + time->tm_mon, 1900 + time->tm_year);
+/*
+    jsonComment = 
+    {
+        "recorded":"YYYY-mm-ddTHH:MM:SS+00:00",
+        "gain":2,
+        "volt":4.2
+        "batt": "OK"
+        "interrupt":"LowBattery" / "SwitchPos" / "MsdRequest" / ""
+    }
+*/
 
-    comment += 36;
+    if (timezoneHours >= 0) {
+        sprintf(comment, "{ \"recorded\" : \"%04d-%02d-%02dT%02d:%02d:%02d+%02d:%02d\"",1900 + time->tm_year,1 + time->tm_mon, time->tm_mday, time->tm_hour, time->tm_min, time->tm_sec, timezoneHours, timezoneMinutes);
+    } else {
+        sprintf(comment, "{ \"recorded\" : \"%04d-%02d-%02dT%02d:%02d:%02d%02d:%02d\"",1900 + time->tm_year,1 + time->tm_mon, time->tm_mday, time->tm_hour, time->tm_min, time->tm_sec, timezoneHours, timezoneMinutes);
+    }
 
-    if (timezoneHours < 0) sprintf(comment, "%d", timezoneHours);
+    comment += 39;
+    sprintf(comment, ", \"gain\":%d",gain);
+    comment += 10;
 
-    if (timezoneHours > 0) sprintf(comment, "+%d", timezoneHours);
-
-    if (timezoneHours < 0 || timezoneHours > 0) comment += 2;
-
-    if (timezoneHours < -9 || timezoneHours > 9) comment += 1;
-
-    if (timezoneMinutes < 0) sprintf(comment, ":%2d", -timezoneMinutes);
-
-    if (timezoneMinutes > 0) sprintf(comment, ":%2d", timezoneMinutes);
-
-    if (timezoneMinutes < 0 || timezoneMinutes > 0) comment += 3;
-
-    sprintf(comment, ") by %s at gain setting %d while battery state was ", artist, (unsigned int)gain);
-
-    comment += 74;
+    sprintf(comment, ", \"volt\":%01d.%01d",batteryState / 10, batteryState%10);
+    comment += 12;
 
     if (batteryState == AM_BATTERY_LOW) {
-
-        sprintf(comment, "less than 3.6V.");
-
-        comment += 15;
-
-    } else if (batteryState >= AM_BATTERY_FULL) {
-
-        sprintf(comment, "greater than 4.9V.");
-
-        comment += 18;
-
+        sprintf(comment, ", \"batt\":\"<3.6\" ");
+    } else if (batteryState == AM_BATTERY_FULL) {
+        sprintf(comment, ", \"batt\":\">4.9\"");
     } else {
-
-        batteryState += 35;
-
-        sprintf(comment, "%01d.%01dV.", batteryState / 10, batteryState % 10);
-
-        comment += 5;
-
+        sprintf(comment, ", \"batt\":\"OK\"  ");
     }
 
-    if (batteryVoltageLow || switchPositionChanged || msdEnableChanged ) {
+    comment += 15;
 
-        sprintf(comment, " Recording cancelled before completion due to ");
-
-        comment += 46;
-
-        if (batteryVoltageLow) {
-
-            sprintf(comment, "low battery voltage.");
-
-        } else if (switchPositionChanged) {
-
-            sprintf(comment, "change of switch position.");
-
-        } else if (msdEnableChanged) {
-
-            sprintf(comment, "change of msd request");
-        
-        }
-
+    if (batteryVoltageLow) {
+        sprintf(comment, ", \"interrupt\":\"LowBattery\" }");
+    } else if (switchPositionChanged) {
+        sprintf(comment, ", \"interrupt\":\"SwitchPos\"  }");
+    } else if (msdEnableChanged) {
+        sprintf(comment, ", \"interrupt\":\"MsdRequest\" }");
+    } else {
+        sprintf(comment, ", \"interrupt\":\"\"           }");
     }
-
+ 
+    comment == 28;
 }
 
 /* USB configuration data structure */
@@ -445,7 +423,7 @@ void AudioMoth_audio_mode(AM_switchPosition_t switchPosition, AM_switchPosition_
 
     //if (switchPosition != prevSwitchPosition) {
 
-         if (switchPosition == AM_SWITCH_DEFAULT) {
+         if (switchPosition == AM_SWITCH_DEFAULT || switchPosition == AM_SWITCH_USB) {
 
              /* Set parameters to start recording now */
 
