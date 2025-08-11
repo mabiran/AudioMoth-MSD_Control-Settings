@@ -242,13 +242,38 @@ typedef struct {
 
 #pragma pack(pop)
 
-static const configSettings_t defaultConfigSettings = {
+static const configSettings_t defaultConfigSettingsA = {
     .time = 0,
     .gain = 2,
     .clockDivider = 4,
     .acquisitionCycles = 16,
     .oversampleRate = 1,
     .sampleRate = 384000,
+    .sampleRateDivider = 1,
+    .sleepDuration = 0,
+    .recordDuration = 10,
+    .enableLED = 1,
+    .activeStartStopPeriods = 0,
+    .startStopPeriods = {
+        {.startMinutes = 60, .stopMinutes = 120},
+        {.startMinutes = 300, .stopMinutes = 420},
+        {.startMinutes = 540, .stopMinutes = 600},
+        {.startMinutes = 720, .stopMinutes = 780},
+        {.startMinutes = 900, .stopMinutes = 960}
+    },
+    .timezoneHours = 0,
+    .enableBatteryCheck = 0,
+    .disableBatteryLevelDisplay = 0,
+    .timezoneMinutes = 0
+};
+
+static const configSettings_t defaultConfigSettingsB = {
+    .time = 0,
+    .gain = 2,
+    .clockDivider = 4,
+    .acquisitionCycles = 16,
+    .oversampleRate = 1,
+    .sampleRate = 48000,
     .sampleRateDivider = 1,
     .sleepDuration = 0,
     .recordDuration = 10,
@@ -347,6 +372,17 @@ static void copyToBackupDomain(uint32_t *dst, uint8_t *src, uint32_t length) {
 
 }
 
+/*  Edit the settings   */
+static void editSettings(uint8_t  pin_GPIO) {
+    configSettings_t defaultConfigSettings;
+    if (pin_GPIO==1) {
+        defaultConfigSettings=defaultConfigSettingsB;
+    } else {
+        defaultConfigSettings=defaultConfigSettingsA;
+    }
+    copyToBackupDomain((uint32_t*)configSettings, (uint8_t*)&defaultConfigSettings, sizeof(configSettings_t));
+}
+
 /* Main function */
 
 int main(void) {
@@ -354,6 +390,9 @@ int main(void) {
     /* Initialise device */
 
     AudioMoth_initialise();
+
+    /*  Set ip the GPIO pin */
+    AudioMoth_setPinValue();
 
     AM_switchPosition_t switchPosition = AudioMoth_getSwitchPosition();
 
@@ -364,8 +403,6 @@ int main(void) {
         *durationOfNextRecording = 0;
 
         *previousSwitchPosition = AM_SWITCH_NONE;
-
-        copyToBackupDomain((uint32_t*)configSettings, (uint8_t*)&defaultConfigSettings, sizeof(configSettings_t));
 
     } else {
 
@@ -722,6 +759,10 @@ static AM_recordingState_t makeRecording(uint32_t currentTime, uint32_t recordDu
     for (int i = 1; i < NUMBER_OF_BUFFERS; i += 1) {
         buffers[i] = buffers[i - 1] + NUMBER_OF_SAMPLES_IN_BUFFER;
     }
+
+    /*  Edit of the GPIO pin */
+    
+    editSettings(AudioMoth_getPinValue());
 
     /* Calculate the bits to shift */
 

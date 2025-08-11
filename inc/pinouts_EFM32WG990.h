@@ -122,4 +122,9 @@
 #define EBI_OE                                  9
 #define EBI_WE                                  8
 
+
+/*  GPIO pin signal entry*/
+#define GPIO_GPIOPORT                           gpioPortB
+#define GPIO_PIN_PB10                              10
+
 #endif

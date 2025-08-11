@@ -163,3 +163,6 @@ bool AudioMoth_closeFile();
 
 void AudioMoth_setupSWOForPrint(void);
 
+/*  Getting value pin GPIO*/
+void AudioMoth_setPinValue(void);
+uint8_t AudioMoth_getPinValue(void);
