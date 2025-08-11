@@ -33,6 +33,30 @@ The original Audiomoth-MSD have a default setting inside is code, but contrary t
 - Pull pin `b10` low for the configuration A
 - Pull pin `b10` high for the configuration B
 
+### Additionnal information about the change of the settings
+The code I added are in:
+  - src > main.c
+      - defaultConfigSettingsA and B : line 245 to 293
+      - editSettings : line 375 to 384 and call line 765
+      - AudioMoth_setPinValue : libe 395
+  - src > audioMoth.c
+      - AudioMoth_setPinValue : line 2093 to 2097
+      - AudioMoth_getPinValue : line 2098 to 2101
+  - inc > audioMoth.h
+      - AudioMoth_setPinValue : line 167
+      - AudioMoth_getPinValue : line 168
+  - inc > pinouts_EFM32WG990.h
+      - GPIO_GPIOPORT : line 127
+      - GPIO_PIN_PB10 : line 128
+  - inc > pinouts_EFM32WG380.h
+      - GPIO_GPIOPORT : line 131
+      - GPIO_PIN_PB10 : line 132
+  - efm32-base > emlib > src
+      - GPIO_PinValueGet : line 340 to 356
+  - efm32-base > emlib > inc
+      - GPIO_PinValueGet : line 973 to 986
+
+
 ### Requirements
 
 - cmake - use Brew on OSX, or your favourite package manager for Linux.
@@ -59,6 +83,7 @@ Requirement for environment variable ARM_NONE_EABI pointing to current ARM toolc
 
 ## Credits
 
+Victortomeo for [Audiomoth-MSD] (https://github.com/victorromeo/AudioMoth-MSD.git)
 David Perez for [AudioMoth CMake port](https://github.com/david-perez/AudioMoth-Project)
 Ryan Kurte for his [efm32-base project](https://github.com/ryankurte/efm32-base).
 
