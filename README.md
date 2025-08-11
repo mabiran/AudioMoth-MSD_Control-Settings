@@ -51,10 +51,42 @@ The code I added are in:
   - inc > pinouts_EFM32WG380.h
       - GPIO_GPIOPORT : line 131
       - GPIO_PIN_PB10 : line 132
-  - efm32-base > emlib > src
-      - GPIO_PinValueGet : line 340 to 356
-  - efm32-base > emlib > inc
-      - GPIO_PinValueGet : line 973 to 986
+
+The code needed to be added:
+  - efm32-base > emlib > src after GPIO_PinModeGet
+        /***************************************************************************//**
+        * @brief
+        *   Get the pin value for a pin GPIO.
+        *
+        * @param[in] port
+        *   The GPIO port to access.
+        *
+        * @param[in] pin
+        *   The pin number in the port.
+        *
+        * @return
+        *   True if pin value (1) or false if (0).
+        ******************************************************************************/
+        uint8_t GPIO_PinValueGet(GPIO_Port_TypeDef port, unsigned int pin) {
+            return (GPIO->P[port].DIN & (1 << pin)) ? 1 : 0;
+        }
+
+  - efm32-base > emlib > inc after GPIO_PinModeSet
+        /***************************************************************************//**
+        * @brief
+        *   Get the pin value for a pin GPIO.
+        *
+        * @param[in] port
+        *   The GPIO port to access.
+        *
+        * @param[in] pin
+        *   The pin number in the port.
+        *
+        * @return
+        *   True if pin value (1) or false if (0).
+        ******************************************************************************/
+        uint8_t GPIO_PinValueGet(GPIO_Port_TypeDef port, unsigned int pin);
+    
 
 
 ### Requirements
