@@ -2092,7 +2092,7 @@ void AudioMoth_setupSWOForPrint(void) {
 
 /*  Setting value pin GPIO*/
 void AudioMoth_setPinValue(void){
-    GPIO_PinModeSet(GPIO_GPIOPORT, GPIO_PIN_PB10, gpioModePushPull, 0);
+    GPIO_PinModeSet(GPIO_GPIOPORT, GPIO_PIN_PB10, gpioModeInputPull, 0);
 
 } 
 /*  Getting value pin GPIO*/
