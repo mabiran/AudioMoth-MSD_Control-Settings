@@ -101,7 +101,7 @@ The code needed to be added:
 
 ### Building
 
-1. `git clone --recurse-submodules https://github.com/PreClomard/AudioMoth-MSD_Control-Settings.git` to download this repository.
+1. `git clone --recurse-submodules https://github.com/mabiran/AudioMoth-MSD_Control-Settings.git` to download this repository.
 2. `mkdir build-release` to create the build directory.
 3. `cd build-release` to switch to the build directory.
 4. `cmake -DCMAKE_BUILD_TYPE=Release ..` to configure the build.  Use `snap run cmake -DCMAKE_BUILD_TYPE=Release ..` if using a snap installed version.
