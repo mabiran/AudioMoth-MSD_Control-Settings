@@ -244,14 +244,14 @@ typedef struct {
 
 static const configSettings_t defaultConfigSettingsA = {
     .time = 0,
-    .gain = 2,
+    .gain = 3,
     .clockDivider = 4,
     .acquisitionCycles = 16,
     .oversampleRate = 1,
     .sampleRate = 96000,
     .sampleRateDivider = 1,
-    .sleepDuration = 0,
-    .recordDuration = 3600,
+    .sleepDuration = 60,
+    .recordDuration = 60,
     .enableLED = 1,
     .activeStartStopPeriods = 0,
     .startStopPeriods = {
@@ -269,14 +269,14 @@ static const configSettings_t defaultConfigSettingsA = {
 
 static const configSettings_t defaultConfigSettingsB = {
     .time = 0,
-    .gain = 2,
+    .gain = 3,
     .clockDivider = 4,
     .acquisitionCycles = 16,
     .oversampleRate = 1,
     .sampleRate = 48000,
     .sampleRateDivider = 1,
-    .sleepDuration = 0,
-    .recordDuration = 3600,
+    .sleepDuration = 60,
+    .recordDuration = 60,
     .enableLED = 1,
     .activeStartStopPeriods = 0,
     .startStopPeriods = {
@@ -393,7 +393,7 @@ int main(void) {
 
     /*  Set ip the GPIO pin */
     AudioMoth_setPinValue();
-
+    editSettings(AudioMoth_getPinValue());
     AM_switchPosition_t switchPosition = AudioMoth_getSwitchPosition();
 
     if (AudioMoth_isInitialPowerUp()) {
@@ -762,7 +762,7 @@ static AM_recordingState_t makeRecording(uint32_t currentTime, uint32_t recordDu
 
     /*  Edit of the GPIO pin */
     
-    editSettings(AudioMoth_getPinValue());
+    //editSettings(AudioMoth_getPinValue());
 
     /* Calculate the bits to shift */
 
